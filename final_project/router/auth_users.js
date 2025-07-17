@@ -21,22 +21,6 @@ const authenticatedUser = (username, password) => {
 
 }
 
-const checkIfUsernameExist = (username, reviews) => {
-
-  for (const [key, value] of Object.entries(reviews)) {
-
-    if (key === username) {
-
-      return true;
-
-    }
-
-  }
-
-  return false;
-
-}
-
 //only registered users can login
 regd_users.post("/login", (req, res) => {
 
