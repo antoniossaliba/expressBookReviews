@@ -21,6 +21,22 @@ const authenticatedUser = (username, password) => {
 
 }
 
+const checkIfUsernameExist = (username, reviews) => {
+
+  for (const [key, value] of Object.entries(reviews)) {
+
+    if (key === username) {
+
+      return true;
+
+    }
+
+  }
+
+  return false;
+
+}
+
 //only registered users can login
 regd_users.post("/login", (req, res) => {
 
@@ -56,6 +72,28 @@ regd_users.post("/login", (req, res) => {
     res.status(404).json({ message: "Check validity of the username and password" });
 
   }
+
+});
+
+regd_users.put("/add/:review", (req, res) => {
+
+  const review = req.params.review;
+  const username = req.session.authorization["username"];
+  const isbn = req.body.isbn;
+
+  if (books[isbn]) {
+
+    books[isbn]["reviews"][username] = review;
+
+    res.send(JSON.stringify(books[isbn], null, 5));
+
+  } else {
+
+    res.status(404).json({ message: "ISBN number not valid!" });
+
+  }
+
+  return;
 
 });
 
