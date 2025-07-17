@@ -11,7 +11,7 @@ public_users.post("/register", (req, res) => {
 
   if (username && password) {
 
-    function doesExist(users, specificUsername) {
+    const doesExist = (users, specificUsername) => {
 
       for (const user of users) {
 
