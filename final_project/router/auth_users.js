@@ -35,7 +35,7 @@ regd_users.post("/login", (req, res) => {
 
         data: password
 
-      }, 'access', { expiresIn: 60 });
+      }, 'access', { expiresIn: 60 * 60 });
 
       req.session.authorization = {
 
@@ -59,11 +59,11 @@ regd_users.post("/login", (req, res) => {
 
 });
 
-regd_users.put("/add/:review", (req, res) => {
+regd_users.put("/auth/review/:isbn", (req, res) => {
 
-  const review = req.params.review;
+  const review = req.body.review;
   const username = req.session.authorization["username"];
-  const isbn = req.body.isbn;
+  const isbn = req.params.isbn;
 
   if (books[isbn]) {
 
@@ -81,10 +81,30 @@ regd_users.put("/add/:review", (req, res) => {
 
 });
 
-// Add a book review
-regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+
+  const isbn = req.params.isbn;
+  const username = req.session.authorization["username"];
+
+  if (books[isbn]) {
+
+    if (books[isbn]["reviews"][username]) {
+
+      delete books[isbn]["reviews"][username];
+      res.send(JSON.stringify(books[isbn], null, 5));
+
+    } else {
+
+      res.status(404).json({ message: `${username} didn't made any reviews yet!` });
+
+    }
+
+  } else {
+
+    res.status(404).json({ message: "ISBN number not valid!" });
+
+  }
+
 });
 
 module.exports.authenticated = regd_users;
